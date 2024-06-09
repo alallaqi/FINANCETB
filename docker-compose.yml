@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  backend:
+    image: openjdk:17-jdk-slim
+    container_name: financial-toolbox-backend
+    working_dir: /app
+    volumes:
+      - ./finance:/app
+    ports:
+      - "8080:8080"
+    command: ["./mvnw", "spring-boot:run"]
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - db
+
+  frontend:
+    image: node:16-alpine
+    container_name: financial-toolbox-frontend
+    working_dir: /app
+    volumes:
+      - ./FINANCETB_FE:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    command: ["npm", "run", "dev"]
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:13
+    container_name: financial-toolbox-db
+    environment:
+      POSTGRES_DB: financialtoolbox
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

@@ -1,7 +1,7 @@
-// Import the necessary modules from NextUI and React
+
 import { NextUIProvider } from '@nextui-org/react';
 import { AuthProvider } from '../context/AuthContext'; // Adjust path as necessary
-import '../app/globals.css';
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
 

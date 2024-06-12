@@ -1,6 +1,7 @@
+"use client";
 import React from "react";
 import { Card, CardHeader, CardFooter, Image, Button } from "@nextui-org/react";
-import { useRouter } from 'next/router'; 
+import { useRouter } from 'next/navigation'; 
 
 export default function App({ showFooter }) {
     const router = useRouter(); // Instantiate the router

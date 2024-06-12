@@ -1,11 +1,13 @@
+"use client"; 
+
 import React from "react";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu } from "@nextui-org/react";
 import { ChevronDown, Lock, Activity, Flash, Server, TagUser, Scale } from "../Assets/Icons";
 import { AcmeLogo } from "../Assets/AcmeLogo.jsx";
 import { useAuth } from '../context/AuthContext';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation'; // Update import
 
-export default function App() {
+export default function NavbarComponent() {
     const { user, logout } = useAuth();
     const router = useRouter();
     const icons = {

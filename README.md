@@ -53,8 +53,8 @@ Whether you're contemplating a home purchase, investment decisions, or consideri
 
 ### Use Case
 
+![image](https://github.com/alallaqi/FINANCETB/assets/162338565/d108d847-6b2f-42e5-a256-d56357207fee)
 
-![img_2.png](img_2.png)
 - UC-1 [User Registration)]: User provides name, email, and password and system stores user information in the User database
 - UC-2 [Calculator Usage]: User selects a specific calculator (mortgage, loan, pension etc.), and inputs parameters for the calculation 
 - UC-3 [User Authentication]: User provides email and password, system verifies the credentials against the User database.
@@ -102,7 +102,8 @@ Our domain model is depicted using UML class diagrams, created in Visual Paradig
 
 - The `FTbackend.finance.data.domain` package contains the following domain objects / entities including getters and setters:
 
-![img_4.png](img_4.png)
+![image](https://github.com/alallaqi/FINANCETB/assets/162338565/44a23649-2b20-475f-a61e-d2bdaa867461)
+
 
 ### Business Logic
 
@@ -221,8 +222,11 @@ Our APIs are documented using Swagger. Below is a list of available APIs:
 
 
 ## Project Management
-Danilo Alexandre Ribeiro da Silva presented the initial business idea and spearheaded the development efforts by creating the initial prototype using JavaScript. Throughout the project lifecycle, Danilo provided support to the team by assisting in gathering business requirements, reviewing code implementations, evaluating architectural decisions, and ensuring the completeness and accuracy of documentation.
-Abdulrahman Abu Salama developed both the back and front ends of the application, leveraging his extensive coding expertise. He was responsible for coding the logic and designing the user interface.
+1. Danilo Alexandre Ribeiro da Silva presented the initial business idea and spearheaded the development efforts by creating the initial prototype using JavaScript. Throughout the project lifecycle, Danilo provided support to the team by assisting in gathering business requirements, reviewing code implementations, evaluating architectural decisions, and ensuring the completeness and accuracy of documentation.
+
+2. Abdulrahman Abu Salama developed both the back and front ends of the application, leveraging his extensive coding expertise. He was responsible for coding the logic and designing the user interface.
+
+
 
 
 ### Roles

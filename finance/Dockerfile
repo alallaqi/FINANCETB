@@ -9,7 +9,7 @@ COPY pom.xml .
 RUN mvn dependency:go-offline
 
 # Copy the entire project and build the application
-COPY target/finance-0.0.1-SNAPSHOT.jar app.jar
+COPY . .
 RUN mvn clean package -DskipTests
 
 # Stage 2: Create the final image

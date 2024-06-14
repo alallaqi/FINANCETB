@@ -87,7 +87,7 @@ const MortgageCalculator = createCalculator("Mortgage", "/api/mortgage/calculate
   { name: "term", label: "Term (years)", placeholder: "Enter term in years" }
 ], "mortgageResult");
 
-const InvestmentCalculator = createCalculator("Investment", "http://localhost:8080/api/investment/calculate", [
+const InvestmentCalculator = createCalculator("Investment", "/api/investment/calculate", [
   { name: "amount", label: "Investment Amount", placeholder: "Enter investment amount" },
   { name: "rate", label: "Annual Interest Rate (%)", placeholder: "Enter annual interest rate" },
   { name: "years", label: "Investment Period (years)", placeholder: "Enter number of years" }

@@ -14,17 +14,31 @@ function Header({ isRestricted }) {
         if (user && user.id) {
             const fetchUserCalculations = async () => {
                 try {
-                    const response = await axiosInstance.get(`/api/users/profile/${user.id}`);
+                    const response = await axiosInstance.get(`/api/users/${user.id}/calculations`);
                     console.log("User in Header:", response.data);
-                    const calculationsData = response.data.calculations || [];
-                    console.log("Calculations fetched:", calculationsData);
-                    const latestCalculationsMap = calculationsData.reduce((acc, calc) => {
-                        if (!acc[calc.type] || new Date(acc[calc.type].timestamp) < new Date(calc.timestamp)) {
-                            acc[calc.type] = calc;
-                        }
-                        return acc;
-                    }, {});
-                    const latestCalculations = Object.values(latestCalculationsMap);
+                    
+                    const latestCalculations = [];
+                    if (response.data.mortgages && response.data.mortgages.length > 0) {
+                        const latestMortgage = response.data.mortgages.reduce((a, b) => new Date(a.timestamp) > new Date(b.timestamp) ? a : b);
+                        latestCalculations.push({ type: 'Mortgage', result: latestMortgage.result });
+                    }
+                    if (response.data.loans && response.data.loans.length > 0) {
+                        const latestLoan = response.data.loans.reduce((a, b) => new Date(a.timestamp) > new Date(b.timestamp) ? a : b);
+                        latestCalculations.push({ type: 'Loan', result: latestLoan.result });
+                    }
+                    if (response.data.emergencyFunds && response.data.emergencyFunds.length > 0) {
+                        const latestEmergencyFund = response.data.emergencyFunds.reduce((a, b) => new Date(a.timestamp) > new Date(b.timestamp) ? a : b);
+                        latestCalculations.push({ type: 'Emergency Fund', result: latestEmergencyFund.result });
+                    }
+                    if (response.data.retirementPlans && response.data.retirementPlans.length > 0) {
+                        const latestRetirementPlan = response.data.retirementPlans.reduce((a, b) => new Date(a.timestamp) > new Date(b.timestamp) ? a : b);
+                        latestCalculations.push({ type: 'Retirement Plan', result: latestRetirementPlan.result });
+                    }
+                    if (response.data.investments && response.data.investments.length > 0) {
+                        const latestInvestment = response.data.investments.reduce((a, b) => new Date(a.timestamp) > new Date(b.timestamp) ? a : b);
+                        latestCalculations.push({ type: 'Investment', result: latestInvestment.result });
+                    }
+
                     console.log("Latest calculations:", latestCalculations);
                     setCalculations(latestCalculations);
                 } catch (error) {
@@ -58,14 +72,12 @@ function Header({ isRestricted }) {
                         <TableHeader>
                             <TableColumn>CALCULATION</TableColumn>
                             <TableColumn>RESULT</TableColumn>
-                            <TableColumn>TIME</TableColumn>
                         </TableHeader>
                         <TableBody>
                             {calculations.map((calc, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{calc.type}</TableCell>
                                     <TableCell>{calc.result}</TableCell>
-                                    <TableCell>{new Date(calc.timestamp).toLocaleString()}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

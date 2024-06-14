@@ -109,8 +109,12 @@ const RetirementCalculator = createCalculator("Retirement", "/api/retirement/cal
 
 
 const EmergencyFundCalculator = createCalculator("Emergency Fund", "/api/emergencyfund/calculate", [
-  { name: "monthlyExpenses", label: "Monthly Expenses", placeholder: "Enter monthly expenses" },
-  { name: "targetMonths", label: "Target Fund Duration (months)", placeholder: "Enter target duration in months" }
-], "emergencyFund");
-
+                                                                                                       { name: "housing", label: "Housing", placeholder: "Enter housing expenses" },
+                                                                                                       { name: "utilities", label: "Utilities", placeholder: "Enter utilities expenses" },
+                                                                                                       { name: "groceries", label: "Groceries", placeholder: "Enter groceries expenses" },
+                                                                                                       { name: "transportation", label: "Transportation", placeholder: "Enter transportation expenses" },
+                                                                                                       { name: "debtPayments", label: "Debt Payments", placeholder: "Enter debt payments" },
+                                                                                                       { name: "otherEssentials", label: "Other Essentials", placeholder: "Enter other essential expenses" },
+                                                                                                       { name: "coverageMonths", label: "Coverage Months", placeholder: "Enter number of coverage months" }
+                                                                                                   ], "emergencyFund");
 export { MortgageCalculator, InvestmentCalculator, LoanCalculator, RetirementCalculator, EmergencyFundCalculator };

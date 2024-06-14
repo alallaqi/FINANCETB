@@ -220,16 +220,16 @@ Our APIs are documented using Swagger. Below is a list of available APIs:
 ### Deployment to a PaaS
 
 
-## Project Management
-Danilo Alexandre Ribeiro da Silva presented the initial business idea and spearheaded the development efforts by creating the initial prototype using JavaScript. Throughout the project lifecycle, Danilo provided support to the team by assisting in gathering business requirements, reviewing code implementations, evaluating architectural decisions, and ensuring the completeness and accuracy of documentation.
-Abdulrahman Abu Salama developed both the back and front ends of the application, leveraging his extensive coding expertise. He was responsible for coding the logic and designing the user interface.
+## Project Management & Roles
+Throughout the project management phase, Danilo Alexandre Ribeiro da Silva initiated the project by presenting the initial business idea and leading the development efforts. He played a comprehensive role, responsible for the creation of the business model, defining business requirements, and overseeing the project's code quality as a code reviewer. Danilo's involvement ensured that the project aligned closely with the business objectives and that the development process adhered to the specified requirements.
 
+Abdulrahman Abu Salama served as the team leader, guiding the project's direction and coordinating the efforts of the development team. In addition to his leadership role, Abdulrahman held charge for both back-end and front-end development, leveraging his extensive coding expertise to implement the project's functions and design its user interface. His technical contributions were instrumental in bringing the project to fruition.
 
-### Roles
-- Back-end and Front-end developer: Abdulrahman Abu Salama
-- Business model creation, business requirements and code reviewer: Danilo Alexandre Ribeiro da Silva
-- API documentation: Daniel Balzarini
-- Use case, database design: Dionis Mrlaku
+Daniel Balzarini played a crucial role in the project by handling APIs and the API documentation, ensuring clear and comprehensive documentation for the project's APIs, which facilitated communication and integration efforts.
+
+Dionis Mrlaku was essential in defining the project's use cases and database design, and he directed their implementation into the project's architecture. Additionally, he was responsible for maintaining the project's readme file.
+
+Each team member's unique contributions were essential to the project's success, underscoring the importance of teamwork and cooperation in project management.
 
 ### Milestones
 1. **Analysis**: Scenario ideation, use case analysis and user story writing.

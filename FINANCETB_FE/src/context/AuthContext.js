@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axiosInstance from '../config/axiosConfig';  // ensure this axios instance is set up with base URL etc.
+import axiosInstance from '../config/axiosConfig';
 import Cookies from 'js-cookie';
-
 
 const AuthContext = createContext();
 
@@ -33,13 +32,9 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await axiosInstance.post('/api/users/login', new URLSearchParams({
+            const response = await axiosInstance.post('/api/users/login', {
                 username,
                 password
-            }), {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
             });
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -64,23 +59,16 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (username, email, password) => {
         try {
-            const response = await axiosInstance.post('/api/users/register', new URLSearchParams({
+            const response = await axiosInstance.post('/api/users/register', {
                 username,
                 email,
-                password,
-                roles: ['ROLE_USER'], 
-            }), {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
+                password
             });
-            return response.data; 
+            return response.data;
         } catch (error) {
             throw error.response ? error.response.data : new Error('Network error');
         }
     };
-    
-    
 
     return (
         <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, login, logout, register }}>

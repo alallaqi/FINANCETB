@@ -4,10 +4,10 @@ import FTbackend.finance.data.domain.Mortgage;
 import FTbackend.finance.data.domain.User;
 import FTbackend.finance.data.repository.MortgageRepository;
 import FTbackend.finance.data.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -15,10 +15,14 @@ public class MortgageService {
 
     private static final Logger log = LoggerFactory.getLogger(MortgageService.class);
 
+    private final UserRepository userRepository;
+    private final MortgageRepository mortgageRepository;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private MortgageRepository mortgageRepository;
+    public MortgageService(UserRepository userRepository, MortgageRepository mortgageRepository) {
+        this.userRepository = userRepository;
+        this.mortgageRepository = mortgageRepository;
+    }
 
     @Transactional
     public Mortgage saveMortgage(Mortgage mortgage, Long userId) {
@@ -48,6 +52,4 @@ public class MortgageService {
 
         return monthlyPayment;
     }
-
-
 }

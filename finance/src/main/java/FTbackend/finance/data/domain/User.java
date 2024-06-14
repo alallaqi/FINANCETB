@@ -17,10 +17,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<Calculation> calculations;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
     private List<Mortgage> mortgages;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -117,14 +113,6 @@ public class User {
 
     public void setEmergencyFunds(List<EmergencyFund> emergencyFunds) {
         this.emergencyFunds = emergencyFunds;
-    }
-
-    public List<Calculation> getCalculations() {
-        return calculations;
-    }
-
-    public void setCalculations(List<Calculation> calculations) {
-        this.calculations = calculations;
     }
 
     public Set<Role> getRoles() {

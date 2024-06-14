@@ -1,17 +1,14 @@
 package FTbackend.finance.controller;
 
 import FTbackend.finance.business.service.EmergencyFundService;
-import FTbackend.finance.data.domain.Calculation;
 import FTbackend.finance.data.domain.EmergencyFund;
 import FTbackend.finance.data.domain.User;
-import FTbackend.finance.data.repository.CalculationRepository;
 import FTbackend.finance.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -23,9 +20,6 @@ public class EmergencyFundController {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private CalculationRepository calculationRepository;
 
     @PostMapping("/calculate")
     public ResponseEntity<?> calculateEmergencyFund(@RequestBody Map<String, Object> payload, Authentication authentication) {
@@ -53,16 +47,7 @@ public class EmergencyFundController {
             emergencyFund.setUser(user);
 
             EmergencyFund result = emergencyFundService.calculateEmergencyFundGoal(emergencyFund);
-
-            // Save the calculation for the authenticated user
-            if (user != null) {
-                Calculation calculation = new Calculation();
-                calculation.setType("EmergencyFund");
-                calculation.setResult(result.getEmergencyFundGoal());
-                calculation.setTimestamp(LocalDateTime.now());
-                calculation.setUser(user);
-                calculationRepository.save(calculation);
-            }
+            emergencyFundService.saveEmergencyFund(result, user.getId());
 
             return ResponseEntity.ok(Map.of("emergencyFundGoal", result.getEmergencyFundGoal()));
         } catch (Exception e) {

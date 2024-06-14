@@ -1,30 +1,28 @@
 package FTbackend.finance.controller;
 
 import FTbackend.finance.business.service.RetirementService;
-import FTbackend.finance.data.domain.Calculation;
+import FTbackend.finance.data.domain.RetirementPlan;
 import FTbackend.finance.data.domain.User;
-import FTbackend.finance.data.repository.CalculationRepository;
 import FTbackend.finance.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/retirement")
 public class RetirementController {
 
-    @Autowired
-    private RetirementService retirementService;
+    private final RetirementService retirementService;
+    private final UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private CalculationRepository calculationRepository;
+    public RetirementController(RetirementService retirementService, UserRepository userRepository) {
+        this.retirementService = retirementService;
+        this.userRepository = userRepository;
+    }
 
     @PostMapping("/calculate")
     public ResponseEntity<?> calculateRetirement(@RequestBody Map<String, Object> payload, Authentication authentication) {
@@ -37,17 +35,18 @@ public class RetirementController {
 
             double result = retirementService.calculateRetirementSavings(currentAge, retirementAge, monthlyContribution, currentSavings, annualReturn);
 
-            // Save the calculation for the authenticated user
+            // Save the retirement plan for the authenticated user
             String username = authentication.getName();
-            User user = userRepository.findByUsername(username).orElse(null);
-            if (user != null) {
-                Calculation calculation = new Calculation();
-                calculation.setType("Retirement");
-                calculation.setResult(result);
-                calculation.setTimestamp(LocalDateTime.now());
-                calculation.setUser(user);
-                calculationRepository.save(calculation);
-            }
+            User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+            RetirementPlan retirementPlan = new RetirementPlan();
+            retirementPlan.setCurrentAge(currentAge);
+            retirementPlan.setRetirementAge(retirementAge);
+            retirementPlan.setMonthlyContribution(monthlyContribution);
+            retirementPlan.setCurrentSavings(currentSavings);
+            retirementPlan.setAnnualReturn(annualReturn);
+            retirementPlan.setResult(result);
+            retirementPlan.setUser(user);
+            retirementService.saveRetirementPlan(retirementPlan, user.getId());
 
             return ResponseEntity.ok(Map.of("retirementResult", result));
         } catch (Exception e) {

@@ -16,20 +16,16 @@ function Header({ isRestricted }) {
                 try {
                     const response = await axiosInstance.get(`/api/users/profile/${user.id}`);
                     console.log("User in Header:", response.data);
-        
-                    const calculations = response.data.calculations || [];
-                    console.log("Calculations fetched:", calculations);
-        
-                    const latestCalculationsMap = calculations.reduce((acc, calc) => {
+                    const calculationsData = response.data.calculations || [];
+                    console.log("Calculations fetched:", calculationsData);
+                    const latestCalculationsMap = calculationsData.reduce((acc, calc) => {
                         if (!acc[calc.type] || new Date(acc[calc.type].timestamp) < new Date(calc.timestamp)) {
                             acc[calc.type] = calc;
                         }
                         return acc;
                     }, {});
-        
                     const latestCalculations = Object.values(latestCalculationsMap);
                     console.log("Latest calculations:", latestCalculations);
-        
                     setCalculations(latestCalculations);
                 } catch (error) {
                     console.error('Failed to fetch calculations:', error);
@@ -41,14 +37,13 @@ function Header({ isRestricted }) {
             fetchUserCalculations();
         }
     }, [user, logout]);
-    
 
     return (
         <div className={styles.headerContainer}>
             <img
                 src="https://plus.unsplash.com/premium_photo-1681469490069-753438d8c3a1?q=80&w=1064&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Header Background"
-                className={styles.backgroundImage}
+                className={styles.backgroundImage} // Ensure this class makes the image responsive
             />
             <div className={styles.overlayBKG}></div>
             <div className={styles.content}>
@@ -58,25 +53,25 @@ function Header({ isRestricted }) {
                 </p>
             </div>
             {isRestricted && calculations.length > 0 && (
-    <div className="flex flex-col gap-3">
-        <Table color={selectedColor} selectionMode="single">
-            <TableHeader>
-                <TableColumn>CALCULATION</TableColumn>
-                <TableColumn>RESULT</TableColumn>
-                <TableColumn>TIME</TableColumn>
-            </TableHeader>
-            <TableBody>
-                {calculations.map((calc, index) => (
-                    <TableRow key={index}>
-                        <TableCell>{calc.type}</TableCell>
-                        <TableCell>{calc.result}</TableCell>
-                        <TableCell>{new Date(calc.timestamp).toLocaleString()}</TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    </div>
-)}
+                <div className="flex flex-col gap-3">
+                    <Table color={selectedColor} selectionMode="single">
+                        <TableHeader>
+                            <TableColumn>CALCULATION</TableColumn>
+                            <TableColumn>RESULT</TableColumn>
+                            <TableColumn>TIME</TableColumn>
+                        </TableHeader>
+                        <TableBody>
+                            {calculations.map((calc, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>{calc.type}</TableCell>
+                                    <TableCell>{calc.result}</TableCell>
+                                    <TableCell>{new Date(calc.timestamp).toLocaleString()}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+            )}
         </div>
     );
 }

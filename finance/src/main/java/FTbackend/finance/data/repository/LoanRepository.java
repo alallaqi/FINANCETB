@@ -1,18 +1,12 @@
 package FTbackend.finance.data.repository;
 
-import java.util.List;
-import FTbackend.finance.data.domain.Investment;
 import FTbackend.finance.data.domain.Loan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface LoanRepository extends JpaRepository<Investment, Long> {
+public interface LoanRepository extends JpaRepository<Loan, Long> {
     List<Loan> findByUserId(Long userId);
 }
-
-
-
-
-
-

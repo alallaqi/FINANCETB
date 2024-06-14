@@ -1,16 +1,14 @@
 package FTbackend.finance.controller;
 
 import FTbackend.finance.business.service.InvestmentService;
-import FTbackend.finance.data.domain.Calculation;
+import FTbackend.finance.data.domain.Investment;
 import FTbackend.finance.data.domain.User;
-import FTbackend.finance.data.repository.CalculationRepository;
 import FTbackend.finance.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -22,9 +20,6 @@ public class InvestmentController {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private CalculationRepository calculationRepository;
 
     @PostMapping("/calculate")
     public ResponseEntity<?> calculateInvestment(@RequestBody Map<String, Object> payload, Authentication authentication) {
@@ -39,12 +34,13 @@ public class InvestmentController {
             String username = authentication.getName();
             User user = userRepository.findByUsername(username).orElse(null);
             if (user != null) {
-                Calculation calculation = new Calculation();
-                calculation.setType("Investment");
-                calculation.setResult(result);
-                calculation.setTimestamp(LocalDateTime.now());
-                calculation.setUser(user);
-                calculationRepository.save(calculation);
+                Investment investment = new Investment();
+                investment.setAmount(amount);
+                investment.setRate(rate);
+                investment.setYears(years);
+                investment.setResult(result);
+                investment.setUser(user);
+                investmentService.saveInvestmentCalculation(investment, user.getId());
             }
 
             return ResponseEntity.ok(Map.of("investmentResult", result));

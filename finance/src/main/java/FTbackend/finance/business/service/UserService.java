@@ -1,11 +1,7 @@
 package FTbackend.finance.business.service;
 
-import FTbackend.finance.data.domain.Calculation;
-import FTbackend.finance.data.domain.Role;
-import FTbackend.finance.data.domain.User;
-import FTbackend.finance.data.repository.CalculationRepository;
-import FTbackend.finance.data.repository.RoleRepository;
-import FTbackend.finance.data.repository.UserRepository;
+import FTbackend.finance.data.domain.*;
+import FTbackend.finance.data.repository.*;
 import FTbackend.finance.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -23,30 +19,38 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final CalculationRepository calculationRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final RoleRepository roleRepository;
 
+    private final EmergencyFundRepository emergencyFundRepository;
+    private final InvestmentRepository investmentRepository;
+    private final LoanRepository loanRepository;
+    private final MortgageRepository mortgageRepository;
+    private final RetirementPlanRepository retirementPlanRepository;
+
     @Autowired
-    public UserService(UserRepository userRepository, CalculationRepository calculationRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, RoleRepository roleRepository,
+                       EmergencyFundRepository emergencyFundRepository, InvestmentRepository investmentRepository,
+                       LoanRepository loanRepository, MortgageRepository mortgageRepository, RetirementPlanRepository retirementPlanRepository) {
         this.userRepository = userRepository;
-        this.calculationRepository = calculationRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.roleRepository = roleRepository;
+        this.emergencyFundRepository = emergencyFundRepository;
+        this.investmentRepository = investmentRepository;
+        this.loanRepository = loanRepository;
+        this.mortgageRepository = mortgageRepository;
+        this.retirementPlanRepository = retirementPlanRepository;
     }
 
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    public List<Calculation> getUserCalculations(Long userId) {
-        List<Calculation> calculations = calculationRepository.findByUserId(userId);
-        System.out.println("Calculations for user " + userId + ": " + calculations);  // Debug log
-        return calculations;
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
     }
-
 
     @Transactional
     public User registerNewUser(String username, String email, String password) {
@@ -135,14 +139,12 @@ public class UserService implements UserDetailsService {
                 AuthorityUtils.createAuthorityList(roles));
     }
 
-
     public Map<String, Object> loginUser(String username, String password) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
         if (passwordEncoder.matches(password, user.getPassword())) {
             Map<String, Object> response = new HashMap<>();
-            response.put("token", jwtUtil.generateToken(user.getUsername()));
             String token = jwtUtil.generateToken(user.getUsername());
             response.put("token", token);
             response.put("user", Map.of("id", user.getId(), "username", user.getUsername(), "email", user.getEmail()));
@@ -157,12 +159,25 @@ public class UserService implements UserDetailsService {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.getCalculations().clear(); // Clear the user's calculations
+            user.getEmergencyFunds().clear(); // Clear the user's emergency funds
+            user.getInvestments().clear(); // Clear the user's investments
+            user.getLoans().clear(); // Clear the user's loans
+            user.getMortgages().clear(); // Clear the user's mortgages
+            user.getRetirementPlans().clear(); // Clear the user's retirement plans
             userRepository.save(user);
         } else {
             throw new IllegalArgumentException("User not found");
         }
+    }
 
-
+    public Map<String, List<?>> getAllUserCalculations(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+        Map<String, List<?>> calculations = new HashMap<>();
+        calculations.put("emergencyFunds", emergencyFundRepository.findByUserId(userId));
+        calculations.put("investments", investmentRepository.findByUserId(userId));
+        calculations.put("loans", loanRepository.findByUserId(userId));
+        calculations.put("mortgages", mortgageRepository.findByUserId(userId));
+        calculations.put("retirementPlans", retirementPlanRepository.findByUserId(userId));
+        return calculations;
     }
 }

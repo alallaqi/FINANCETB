@@ -1,5 +1,6 @@
 package FTbackend.finance.data.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,11 +13,12 @@ public class RetirementPlan {
     private double monthlyContribution;
     private double currentSavings;
     private double annualReturn;
+    private double result;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
-
 
     // Getters and setters
     public Long getId() { return id; }
@@ -31,6 +33,13 @@ public class RetirementPlan {
     public void setCurrentSavings(double currentSavings) { this.currentSavings = currentSavings; }
     public double getAnnualReturn() { return annualReturn; }
     public void setAnnualReturn(double annualReturn) { this.annualReturn = annualReturn; }
+    public double getResult() {
+        return result;
+    }
+
+    public void setResult(double result) {
+        this.result = result;
+    }
     public User getUser() {
         return user;
     }

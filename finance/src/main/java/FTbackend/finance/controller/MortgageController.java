@@ -1,55 +1,53 @@
 package FTbackend.finance.controller;
 
 import FTbackend.finance.business.service.MortgageService;
-import FTbackend.finance.data.domain.Calculation;
 import FTbackend.finance.data.domain.Mortgage;
 import FTbackend.finance.data.domain.User;
-import FTbackend.finance.data.repository.CalculationRepository;
 import FTbackend.finance.data.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/mortgage")
 public class MortgageController {
 
-    private static final Logger log = LoggerFactory.getLogger(MortgageController.class);
+    private final MortgageService mortgageService;
+    private final UserRepository userRepository;
 
     @Autowired
-    private MortgageService mortgageService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private CalculationRepository calculationRepository;
+    public MortgageController(MortgageService mortgageService, UserRepository userRepository) {
+        this.mortgageService = mortgageService;
+        this.userRepository = userRepository;
+    }
 
     @PostMapping("/calculate")
     public ResponseEntity<?> calculateMortgage(@RequestBody Map<String, Object> payload, Authentication authentication) {
-        log.info("Received mortgage calculation request with payload={}", payload);
+        try {
+            double principal = Double.parseDouble(payload.get("principal").toString());
+            double interestRate = Double.parseDouble(payload.get("interestRate").toString());
+            int term = Integer.parseInt(payload.get("term").toString());
 
-        double principal = Double.parseDouble(payload.get("principal").toString());
-        double annualInterestRate = Double.parseDouble(payload.get("interestRate").toString());
-        int termInYears = Integer.parseInt(payload.get("term").toString());
+            double result = mortgageService.calculateMonthlyPayment(principal, interestRate, term);
 
-        double result = mortgageService.calculateMonthlyPayment(principal, annualInterestRate, termInYears);
+            // Save the mortgage for the authenticated user
+            String username = authentication.getName();
+            User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+            Mortgage mortgage = new Mortgage();
+            mortgage.setPrincipal(principal);
+            mortgage.setInterestRate(interestRate);
+            mortgage.setTerm(term);
+            mortgage.setUser(user);
+            mortgageService.saveMortgage(mortgage, user.getId());
 
-        // Save the calculation for the authenticated user
-        String username = authentication.getName();
-        User user = userRepository.findByUsername(username).orElse(null);
-        if (user != null) {
-            Calculation calculation = new Calculation();
-            calculation.setType("Mortgage");
-            calculation.setResult(result);
-            calculation.setUser(user);
-            calculationRepository.save(calculation);
+            return ResponseEntity.ok(Map.of("mortgageResult", result));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("An error occurred during the calculation.");
         }
-        return ResponseEntity.ok(Map.of("mortgageResult", result));
     }
 }

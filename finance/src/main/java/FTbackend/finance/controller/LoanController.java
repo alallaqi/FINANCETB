@@ -1,16 +1,14 @@
 package FTbackend.finance.controller;
 
 import FTbackend.finance.business.service.LoanService;
-import FTbackend.finance.data.domain.Calculation;
+import FTbackend.finance.data.domain.Loan;
 import FTbackend.finance.data.domain.User;
-import FTbackend.finance.data.repository.CalculationRepository;
 import FTbackend.finance.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -21,9 +19,6 @@ public class LoanController {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private CalculationRepository calculationRepository;
 
     @PostMapping("/calculate")
     public ResponseEntity<?> calculateLoan(@RequestBody Map<String, Object> payload, Authentication authentication) {
@@ -36,15 +31,14 @@ public class LoanController {
 
             // Save the calculation for the authenticated user
             String username = authentication.getName();
-            User user = userRepository.findByUsername(username).orElse(null);
-            if (user != null) {
-                Calculation calculation = new Calculation();
-                calculation.setType("Loan");
-                calculation.setResult(result);
-                calculation.setTimestamp(LocalDateTime.now());
-                calculation.setUser(user);
-                calculationRepository.save(calculation);
-            }
+            User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+            Loan loan = new Loan();
+            loan.setPrincipal(principal);
+            loan.setInterestRate(interestRate);
+            loan.setTerm(term);
+            loan.setResult(result);
+            loan.setUser(user);
+            loanService.saveLoan(loan, user.getId());
 
             return ResponseEntity.ok(Map.of("loanResult", result));
         } catch (Exception e) {

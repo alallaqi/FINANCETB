@@ -21,6 +21,7 @@ public class EmergencyFundService {
     public List<EmergencyFund> getUserEmergencyFunds(Long userId) {
         return emergencyFundRepository.findByUserId(userId);
     }
+
     @Transactional
     public EmergencyFund saveEmergencyFund(EmergencyFund emergencyFund, Long userId) {
         User user = userRepository.findById(userId)
@@ -36,6 +37,6 @@ public class EmergencyFundService {
         emergencyFund.setTotalMonthlyExpenses(totalMonthlyExpenses);
         double emergencyFundGoal = totalMonthlyExpenses * emergencyFund.getCoverageMonths();
         emergencyFund.setEmergencyFundGoal(emergencyFundGoal);
-        return emergencyFundRepository.save(emergencyFund);
+        return emergencyFund;
     }
 }

@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll() // Allow public access to registration and login
-                        .requestMatchers("/api/users/profile/**").permitAll() // Require USER or ADMIN role for profile
+                        .requestMatchers("/api/users/profile/**").hasRole("USER") // Require USER or ADMIN role for profile
                         .requestMatchers("/api/users/admin/**").hasRole("ADMIN") // Require ADMIN role for admin endpoints
                         .requestMatchers("/api/mortgage/calculate",
                                 "/api/retirement/calculate",
@@ -64,9 +64,18 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder)
+                .and()
+                .build();
+    }
+
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Adjust this to match your front-end URL
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/")); // Adjust this to match your front-end URL
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setExposedHeaders(Arrays.asList("X-Auth-Token"));

@@ -1,5 +1,6 @@
 package FTbackend.finance.data.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,6 +21,7 @@ public class EmergencyFund {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
 
     // Constructors
@@ -105,6 +107,7 @@ public class EmergencyFund {
     public void setEmergencyFundGoal(double emergencyFundGoal) {
         this.emergencyFundGoal = emergencyFundGoal;
     }
+
     public User getUser() {
         return user;
     }

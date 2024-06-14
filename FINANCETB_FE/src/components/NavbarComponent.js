@@ -97,11 +97,6 @@ export default function NavbarComponent() {
                         </DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
-                <NavbarItem isActive>
-                    <Link href={user ? "/Restrictedhome" : "/home"} aria-current="page">
-                        Home
-                    </Link>
-                </NavbarItem>
             </NavbarContent>
             <NavbarContent justify="end">
                 {user ? (

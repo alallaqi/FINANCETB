@@ -217,8 +217,59 @@ Our APIs are documented using Swagger. Below is a list of available APIs:
 
 ![Swagger Screenshot](replace_with_actual_screenshot)
 
-### Deployment to a PaaS
+### Deployment
 
+Prerequisites
+Docker installed on your machine.
+Heroku CLI installed and configured.
+Heroku account and access to the Heroku application boiling-lowlands-43453.
+
+Deployment Steps:
+
+Build the Docker Image
+
+Build the Docker image for the Financial Toolbox backend:
+
+
+docker build --platform linux/amd64 -t financial-toolbox-prod .
+Login to Heroku
+
+Login to Heroku using the Heroku CLI:
+
+heroku login
+Login to Heroku Container Registry
+
+Login to the Heroku Container Registry:
+
+heroku container:login
+Set Docker Client Timeout
+
+Set the Docker client timeout to ensure the process doesn't time out:
+
+
+export DOCKER_CLIENT_TIMEOUT=300
+export COMPOSE_HTTP_TIMEOUT=300
+Tag the Docker Image
+
+Tag the Docker image for the Heroku container registry:
+
+
+docker tag financial-toolbox-prod registry.heroku.com/boiling-lowlands-43453/web
+Push the Docker Image to Heroku
+
+Push the tagged Docker image to the Heroku container registry:
+
+
+docker push registry.heroku.com/boiling-lowlands-43453/web
+Release the Image on Heroku
+
+Release the pushed image on Heroku:
+
+heroku container:release web -a boiling-lowlands-43453
+Access the Application
+Once the deployment is complete, you can access the Financial Toolbox backend via the Heroku application URL:
+
+https://boiling-lowlands-43453.herokuapp.com
 
 ## Project Management & Roles
 Throughout the project management phase, Danilo Alexandre Ribeiro da Silva initiated the project by presenting the initial business idea and leading the development efforts. He played a comprehensive role, responsible for the creation of the business model, defining business requirements, and overseeing the project's code quality as a code reviewer. Danilo's involvement ensured that the project aligned closely with the business objectives and that the development process adhered to the specified requirements.

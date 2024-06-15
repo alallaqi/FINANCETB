@@ -303,10 +303,10 @@ Each team member's unique contributions were essential to the project's success,
 ### Project Issues
 1. Admin Account Creation
 Ensure the admin account is created and functional. Verify that the endpoint for creating the admin user is properly secured and that the admin credentials are correctly stored and managed.
-2. JWT Token Issues
-Address the issue where JWT strings are causing exceptions due to invalid formatting. Ensure that JWT tokens are correctly generated, validated, and used in the application.
-3. Memory Quota Exceeded
-Resolve the memory usage issue that results in Heroku's "Memory quota exceeded" errors. Optimize the application to reduce memory consumption and ensure it operates within Heroku's memory limits.
+2. Session Issue
+Address the issue where when the page is refreshed user is undifend.
+3. calculations x2
+Resolve the morgadge calculator issue, emergency fund.
 Version 2.0 Release
 
 ### New Features

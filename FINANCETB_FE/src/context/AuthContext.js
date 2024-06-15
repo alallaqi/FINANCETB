@@ -11,23 +11,34 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            setLoading(true);
-            axiosInstance.get(`/api/users/profile/`)
-                .then(response => {
-                    setUser(response.data);
-                    console.log('Auth state initialized with user data from API.');
-                })
-                .catch(err => {
-                    console.error('Error fetching user details on init:', err);
+        const initializeAuth = async () => {
+            const token = localStorage.getItem('token');
+            console.log('Token retrieved from localStorage:', token);
+
+            if (token) {
+                setLoading(true);
+                try {
+                    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                    const response = await axiosInstance.get('/api/users/profile/');
+                    if (response.data) {
+                        setUser(response.data);
+                        console.log('User data fetched:', response.data);
+                    } else {
+                        throw new Error("Failed to fetch user data");
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch user details or token invalid', error);
                     logout();
-                })
-                .finally(() => setLoading(false));
-        } else {
-            console.log('No token found, user needs to log in.');
-            setLoading(false);
-        }
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                console.log('No token found, user needs to log in.');
+                setLoading(false);
+            }
+        };
+
+        initializeAuth();
     }, []);
 
     const login = async (username, password) => {
@@ -38,6 +49,7 @@ export const AuthProvider = ({ children }) => {
             });
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
             setUser(response.data.user);
             Cookies.set('user', JSON.stringify(response.data.user), { expires: 1 });
             console.log('Login successful, user:', response.data.user.username);

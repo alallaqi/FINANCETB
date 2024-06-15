@@ -299,6 +299,27 @@ Each team member's unique contributions were essential to the project's success,
 5. **Data and API Implementation**: Implementation of data access and business logic layers, and API.
 6. **Security and Frontend Implementation**: Integration of security framework and frontend realisation.
 7. (optional) **Deployment**: Deployment of Web application on cloud infrastructure.
+### Project Issues
+1.Admin Account Creation
+Ensure the admin account is created and functional. Verify that the endpoint for creating the admin user is properly secured and that the admin credentials are correctly stored and managed.
+JWT Token Issues
+Address the issue where JWT strings are causing exceptions due to invalid formatting. Ensure that JWT tokens are correctly generated, validated, and used in the application.
+Memory Quota Exceeded
+Resolve the memory usage issue that results in Heroku's "Memory quota exceeded" errors. Optimize the application to reduce memory consumption and ensure it operates within Heroku's memory limits.
+Version 2.0 Release
+
+### New Features
+Enhanced User Interface: Improve the user experience with a redesigned interface.
+Advanced Analytics: Add detailed analytics and reporting features for better financial insights.
+Multi-Language Support: Introduce support for multiple languages to cater to a broader audience.
+Bug Fixes
+Fix known issues from version 1.0, including memory management and JWT token handling.
+Improve security measures to ensure data protection and compliance with industry standards.
+Performance Improvements
+Optimize the backend to handle larger volumes of data and concurrent users efficiently.
+Enhance the speed and responsiveness of the application through code optimization and better resource management.
+### Release Date
+The tentative release date for version 2.0 is Q4 2024.
 
 #### Maintainer
 - Abdulrahman Abu Salama

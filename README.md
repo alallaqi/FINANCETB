@@ -218,58 +218,67 @@ Our APIs are documented using Swagger. Below is a list of available APIs:
 ![Swagger Screenshot](replace_with_actual_screenshot)
 
 ### Deployment
+This document outlines the steps to deploy the Financial Toolbox backend to Heroku using Docker.
 
-Prerequisites
-Docker installed on your machine.
-Heroku CLI installed and configured.
-Heroku account and access to the Heroku application boiling-lowlands-43453.
+## Prerequisites
 
-Deployment Steps:
+- Docker installed on your machine.
+- Heroku CLI installed and configured.
+- Heroku account and access to the Heroku application `boiling-lowlands-43453`.
 
-Build the Docker Image
+## Deployment Steps
 
-Build the Docker image for the Financial Toolbox backend:
+1. **Build the Docker Image**
 
+   ```sh
+   docker build --platform linux/amd64 -t financial-toolbox-prod .
+   ```
 
-docker build --platform linux/amd64 -t financial-toolbox-prod .
-Login to Heroku
+2. **Login to Heroku**
+   
+   ```sh
+   heroku login
+   ```
 
-Login to Heroku using the Heroku CLI:
+3. **Login to Heroku Container Registry**
 
-heroku login
-Login to Heroku Container Registry
+   ```sh
+   heroku container:login
+   ```
 
-Login to the Heroku Container Registry:
+4. **Set Docker Client Timeout**
 
-heroku container:login
-Set Docker Client Timeout
+   ```sh
+   export DOCKER_CLIENT_TIMEOUT=300
+   export COMPOSE_HTTP_TIMEOUT=300
+   ```
 
-Set the Docker client timeout to ensure the process doesn't time out:
+5. **Tag the Docker Image**
 
+   ```sh
+   docker tag financial-toolbox-prod registry.heroku.com/boiling-lowlands-43453/web
+   ```
 
-export DOCKER_CLIENT_TIMEOUT=300
-export COMPOSE_HTTP_TIMEOUT=300
-Tag the Docker Image
+6. **Push the Docker Image to Heroku**
 
-Tag the Docker image for the Heroku container registry:
+   ```sh
+   docker push registry.heroku.com/boiling-lowlands-43453/web
+   ```
 
+7. **Release the Image on Heroku**
 
-docker tag financial-toolbox-prod registry.heroku.com/boiling-lowlands-43453/web
-Push the Docker Image to Heroku
+   ```sh
+   heroku container:release web -a boiling-lowlands-43453
+   ```
 
-Push the tagged Docker image to the Heroku container registry:
+## Access the Application
 
-
-docker push registry.heroku.com/boiling-lowlands-43453/web
-Release the Image on Heroku
-
-Release the pushed image on Heroku:
-
-heroku container:release web -a boiling-lowlands-43453
-Access the Application
 Once the deployment is complete, you can access the Financial Toolbox backend via the Heroku application URL:
 
+```
 https://boiling-lowlands-43453.herokuapp.com
+```
+```
 
 ## Project Management & Roles
 Throughout the project management phase, Danilo Alexandre Ribeiro da Silva initiated the project by presenting the initial business idea and leading the development efforts. He played a comprehensive role, responsible for the creation of the business model, defining business requirements, and overseeing the project's code quality as a code reviewer. Danilo's involvement ensured that the project aligned closely with the business objectives and that the development process adhered to the specified requirements.
